@@ -1,0 +1,63 @@
+class Solution {
+public:
+    bool isSafe(int x, int y, vector<vector<int>>& maze, vector<vector<bool>>& visit, int n) {
+        if (x < 0 || y < 0 || x >= n || y >= n || visit[x][y] || maze[x][y] == 0)
+            return false;
+        return true;
+    }
+
+    void solve(vector<vector<int>>& maze, vector<vector<bool>>& visit, int n, vector<string>& answer,
+               int sx, int sy, int d, string output) {
+        
+        if (sx == d && sy == d) {
+            answer.push_back(output);
+            return;
+        }
+
+        // Down
+        int movx = sx + 1, movy = sy;
+        if (isSafe(movx, movy, maze, visit, n)) {
+            visit[movx][movy] = true;
+            solve(maze, visit, n, answer, movx, movy, d, output + "D");
+            visit[movx][movy] = false;
+        }
+
+        // Left
+        movx = sx, movy = sy - 1;
+        if (isSafe(movx, movy, maze, visit, n)) {
+            visit[movx][movy] = true;
+            solve(maze, visit, n, answer, movx, movy, d, output + "L");
+            visit[movx][movy] = false;
+        }
+
+        // Right
+        movx = sx, movy = sy + 1;
+        if (isSafe(movx, movy, maze, visit, n)) {
+            visit[movx][movy] = true;
+            solve(maze, visit, n, answer, movx, movy, d, output + "R");
+            visit[movx][movy] = false;
+        }
+
+        // Up
+        movx = sx - 1, movy = sy;
+        if (isSafe(movx, movy, maze, visit, n)) {
+            visit[movx][movy] = true;
+            solve(maze, visit, n, answer, movx, movy, d, output + "U");
+            visit[movx][movy] = false;
+        }
+    }
+
+    vector<string> ratInMaze(vector<vector<int>>& maze) {
+        int n = maze.size();
+        vector<string> answer;
+
+        if (maze[0][0] == 0)
+            return answer;
+
+        vector<vector<bool>> visit(n, vector<bool>(n, false));
+        visit[0][0] = true;
+        solve(maze, visit, n, answer, 0, 0, n - 1, "");
+
+        return answer;
+    }
+};
